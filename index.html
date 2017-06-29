@@ -31,7 +31,7 @@
 				var isBack=device.label.search("back")>-1;
 				
 				var option={
-					deviceId:{exact:$("#deviceList").val()},
+					deviceId:{exact:device.deviceId},
 					facingMode:isBack?"environment":"user"
 				}
 				setcam(option);
