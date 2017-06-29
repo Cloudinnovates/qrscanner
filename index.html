@@ -24,6 +24,12 @@
 	
 			$("#deviceList").change(function(){
 			
+				  if (window.stream) {
+					window.stream.getTracks().forEach(function(track) {
+					  track.stop();
+					});
+				  }
+			
 				device=deviceList[parseInt($("#deviceList").val())];
 			
 				console.log(device);
