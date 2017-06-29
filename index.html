@@ -99,6 +99,7 @@
 				try{
 					var result=qrcode.decode();
 					$("#result").html(result);
+					setTimeout(captureToCanvas, 300);
 				}catch(e){       
 					console.log(e);
 					setTimeout(captureToCanvas, 300);
