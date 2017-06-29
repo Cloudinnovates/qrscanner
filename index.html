@@ -23,14 +23,22 @@
 			findDevice();
 	
 			$("#deviceList").change(function(){
+			
+				device=deviceList[toInt($("#deviceList").val())];
+			
+				console.log(device);
+			
+				var isBack=device.label.search("back")>-1;
+				
 				var option={
-					deviceId:{exact:$("#deviceList").val()}
+					deviceId:{exact:$("#deviceList").val()},
+					facingMode:isBack?"environment":"user"
 				}
 				setcam(option);
 			})
 	
-			//setcam(true);
-			use();
+			setcam(true);
+			//use();
 	
 		});
 		
@@ -84,9 +92,13 @@
 						}
 					})
 					
-					deviceList.forEach(function(device){
-						$("#deviceList").append("<option value='"+device.deviceId+"'>"+device.label+"</option>");
-					})
+					for(i=0;i<deviceList.length;i++){
+						$("#deviceList").append("<option value='"+i+"'>"+deviceList[i].label+"</option>");
+					}
+					
+					//deviceList.forEach(function(device){
+						//$("#deviceList").append("<option value='"+device.deviceId+"'>"+device.label+"</option>");
+					//})
 
 				});
 
