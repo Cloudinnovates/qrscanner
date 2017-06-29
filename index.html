@@ -5,6 +5,7 @@
 	<title>HTML5 QR code Reader</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="adapter-latest.js"></script>
 	<script type="text/javascript" src="html5-qrcode.min.js"></script>
 	<script type="text/javascript">
 		
@@ -16,6 +17,8 @@
 		
 		$(function(){
 
+			v=document.getElementById("v");
+			
 			gCanvas = document.getElementById("qr-canvas");
 			gCtx = gCanvas.getContext("2d");
 			gCtx.clearRect(0, 0, 300, 300);
@@ -44,7 +47,7 @@
 				setcam2(option);
 			})
 	
-			setcam(true);
+			setcam2(true);
 			//use();
 	
 		});
@@ -116,8 +119,8 @@
 		}
 		
 		function gotStream(stream) {
-		  window.stream = stream; // make stream available to console
-		  v.src = window.URL.createObjectURL(stream);
+			window.stream = stream; // make stream available to console
+			v.srcObject = stream;
 		  // Refresh button list in case labels have become available
 		  return navigator.mediaDevices.enumerateDevices();
 		}
@@ -132,7 +135,7 @@
 		
 		function setcam(options){
 		
-			v=document.getElementById("v");
+			
 			
 			console.log({video: options, audio: false});
 		
