@@ -1,0 +1,152 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="HTML5 QR code Reader : A cross platform HTML5 QR code reader.">
+	<title>HTML5 QR code Reader</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="html5-qrcode.min.js"></script>
+	<script type="text/javascript">
+		
+		var gCanvas=null;
+		var gCtx=null;
+		var v=null;
+		
+		var deviceList=[];
+		
+		$(function(){
+
+			gCanvas = document.getElementById("qr-canvas");
+			gCtx = gCanvas.getContext("2d");
+			gCtx.clearRect(0, 0, 300, 300);
+
+			findDevice();
+	
+			$("#deviceList").change(function(){
+				var option={
+					deviceId:{exact:$("#deviceList").val()}
+				}
+				setcam(option);
+			})
+	
+			setcam(true);
+	
+		});
+		
+		function success(stream){
+			$("#vid_error").append("<br>success:"+JSON.stringify(stream));
+			v.src = window.URL.createObjectURL(stream);
+		}
+		
+		function error(data){
+			$("#vid_error").append("<br>fail:"+JSON.stringify(data));
+		}
+
+		function use(){
+		
+			var n=navigator;
+			//qrcode.video=document.getElementById(videoId);
+
+			var options = true;
+			try{
+				navigator.mediaDevices.enumerateDevices()
+				.then(function(devices) {
+				  devices.forEach(function(device) {
+					if (device.kind === 'videoinput') {
+					  if(device.label.toLowerCase().search("back") >-1)
+						options={'deviceId': {'exact':device.deviceId}, 'facingMode':'environment'};
+					}
+					$("#vid_error").append(device.kind + ": " + device.label + " id = " + device.deviceId+"<br>");
+				  });
+				  
+				  
+				  setcam(options);
+				});
+				
+			}
+			catch(e)
+			{
+				$("#vid_error").append(e);
+			}
+
+		}
+
+		function findDevice(){
+
+			try{
+			
+				navigator.mediaDevices.enumerateDevices().then(function(devices){
+				
+					devices.forEach(function(device){
+						if(device.kind=="videoinput"){
+							deviceList.push(device);
+						}
+					})
+					
+					deviceList.forEach(function(device){
+						$("#deviceList").append("<option value='"+device.deviceId+"'>"+device.label+"</option>");
+					})
+
+				});
+
+			}catch(e){
+				console.log(e);
+			}
+
+		}
+		
+		
+		function setcam(options){
+		
+			v=document.getElementById("v");
+			
+			console.log({video: options, audio: false});
+		
+			var n=navigator;
+		
+			if(n.getUserMedia){
+				$("#vid_error").append("options1:"+JSON.stringify(options));
+				qrcode.webkit=true;
+				n.getUserMedia({video: options, audio: false}, success, error);
+			}else if(n.webkitGetUserMedia){
+				$("#vid_error").append("options2:"+JSON.stringify(options));
+				qrcode.webkit=true;
+				n.webkitGetUserMedia({video:options, audio: false}, success, error);
+			}else if(n.mozGetUserMedia){
+				$("#vid_error").append("options3:"+JSON.stringify(options));
+				qrcode.moz=true;
+				n.mozGetUserMedia({video: options, audio: false}, success, error);
+			}
+			setTimeout(captureToCanvas, 500);
+		}
+
+		function captureToCanvas() {
+
+			try{
+				gCtx.drawImage(v,0,0);
+				try{
+					var result=qrcode.decode();
+					$("#result").html(result);
+				}catch(e){       
+					console.log(e);
+					setTimeout(captureToCanvas, 300);
+				}
+			}
+			catch(e){
+				console.log(e);
+				setTimeout(captureToCanvas, 300);
+			}
+
+		}
+		
+	</script>
+</head>
+<body>
+	<div><video id="v" width="300px" height="300px" autoplay></video></div>
+	<canvas id="qr-canvas" style="display:none"></canvas>
+	
+	<select id="deviceList"></select>
+
+	<div id="result" style="border:1px dashed gray;min-width:200px;min-height:50px"></div>
+</body>
+</html>
