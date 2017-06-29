@@ -40,7 +40,8 @@
 					deviceId:{exact:device.deviceId},
 					facingMode:isBack?"environment":"user"
 				}
-				setcam(option);
+				//setcam(option);
+				setcam2(option);
 			})
 	
 			setcam(true);
@@ -112,6 +113,20 @@
 				console.log(e);
 			}
 
+		}
+		
+		function gotStream(stream) {
+		  window.stream = stream; // make stream available to console
+		  v.src = stream;
+		  // Refresh button list in case labels have become available
+		  return navigator.mediaDevices.enumerateDevices();
+		}
+		
+		function setcam2(options){
+		
+			var constraints={video: options, audio: false};
+		
+			navigator.mediaDevices.getUserMedia(constraints).then(gotStream);
 		}
 		
 		
