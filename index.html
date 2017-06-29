@@ -117,7 +117,7 @@
 		
 		function gotStream(stream) {
 		  window.stream = stream; // make stream available to console
-		  v.src = stream;
+		  v.src = window.URL.createObjectURL(stream);
 		  // Refresh button list in case labels have become available
 		  return navigator.mediaDevices.enumerateDevices();
 		}
