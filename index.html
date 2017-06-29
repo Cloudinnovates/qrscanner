@@ -51,44 +51,6 @@
 			//use();
 	
 		});
-		
-		function success(stream){
-			$("#vid_error").append("<br>success:"+JSON.stringify(stream));
-			v.src = window.URL.createObjectURL(stream);
-		}
-		
-		function error(data){
-			$("#vid_error").append("<br>fail:"+JSON.stringify(data));
-		}
-
-		function use(){
-		
-			var n=navigator;
-			//qrcode.video=document.getElementById(videoId);
-
-			var options = true;
-			try{
-				navigator.mediaDevices.enumerateDevices()
-				.then(function(devices) {
-				  devices.forEach(function(device) {
-					if (device.kind === 'videoinput') {
-					  if(device.label.toLowerCase().search("back") >-1)
-						options={'deviceId': {'exact':device.deviceId}, 'facingMode':'environment'};
-					}
-					$("#vid_error").append(device.kind + ": " + device.label + " id = " + device.deviceId+"<br>");
-				  });
-				  
-				  
-				  setcam(options);
-				});
-				
-			}
-			catch(e)
-			{
-				$("#vid_error").append(e);
-			}
-
-		}
 
 		function findDevice(){
 
@@ -105,10 +67,6 @@
 					for(i=0;i<deviceList.length;i++){
 						$("#deviceList").append("<option value='"+i+"'>"+deviceList[i].label+"</option>");
 					}
-					
-					//deviceList.forEach(function(device){
-						//$("#deviceList").append("<option value='"+device.deviceId+"'>"+device.label+"</option>");
-					//})
 
 				});
 
@@ -131,31 +89,6 @@
 		
 			navigator.mediaDevices.getUserMedia(constraints).then(gotStream);
 			
-			setTimeout(captureToCanvas, 500);
-		}
-		
-		
-		function setcam(options){
-		
-			
-			
-			console.log({video: options, audio: false});
-		
-			var n=navigator;
-		
-			if(n.getUserMedia){
-				$("#vid_error").append("options1:"+JSON.stringify(options));
-				qrcode.webkit=true;
-				n.getUserMedia({video: options, audio: false}, success, error);
-			}else if(n.webkitGetUserMedia){
-				$("#vid_error").append("options2:"+JSON.stringify(options));
-				qrcode.webkit=true;
-				n.webkitGetUserMedia({video:options, audio: false}, success, error);
-			}else if(n.mozGetUserMedia){
-				$("#vid_error").append("options3:"+JSON.stringify(options));
-				qrcode.moz=true;
-				n.mozGetUserMedia({video: options, audio: false}, success, error);
-			}
 			setTimeout(captureToCanvas, 500);
 		}
 
@@ -181,8 +114,8 @@
 	</script>
 </head>
 <body>
-	<div><video id="v" width="300px" height="300px" autoplay></video></div>
-	<canvas id="qr-canvas"></canvas>
+	<div><video id="v" width="300px" autoplay></video></div>
+	<canvas id="qr-canvas" width="500px" height="500px" style="display:none"></canvas>
 	
 	<select id="deviceList"></select>
 
