@@ -50,9 +50,9 @@
 				setcam2(option);
 			})
 	
-			//setcam2(true);
-			$("#deviceList").change();
-			
+			setcam2(true);
+			//setTimeout(function(){$("#deviceList").change();}, 5000);
+
 		});
 
 		function findDevice(){
@@ -62,7 +62,7 @@
 				navigator.mediaDevices.enumerateDevices().then(function(devices){
 				
 					devices.forEach(function(device){
-						if(device.kind=="videoinput" && device.label.search("back")>-1){
+						if(device.kind=="videoinput"){
 							deviceList.push(device);
 						}
 					})
