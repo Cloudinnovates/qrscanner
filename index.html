@@ -1,12 +1,16 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="description" content="HTML5 QR code Reader : A cross platform HTML5 QR code reader.">
-	<title>HTML5 QR code Reader</title>
+	<meta name="description" content="Free QR Scanner">
+	<meta name="keywords" content="qr,reader,scanner,decoder,掃描,解碼">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>QR code Reader</title>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-	<script type="text/javascript" src="adapter-latest.js"></script>
-	<script type="text/javascript" src="html5-qrcode.min.js"></script>
+	<script type="text/javascript" src="resources/js/adapter-latest.js"></script>
+	<script type="text/javascript" src="resources/js/html5-qrcode.min.js"></script>
+	<script type="text/javascript" src="resources/js/vendor/foundation.min.js"></script>
+	<script type="text/javascript" src="resources/js/app.js"></script>
+	<link rel="stylesheet" href="resources/css/foundation.min.css"/>
 	<script type="text/javascript">
 		
 		var gCanvas=null;
@@ -43,13 +47,11 @@
 					deviceId:{exact:device.deviceId},
 					facingMode:isBack?"environment":"user"
 				}
-				//setcam(option);
 				setcam2(option);
 			})
 	
 			setcam2(true);
-			//use();
-	
+
 		});
 
 		function findDevice(){
@@ -59,7 +61,7 @@
 				navigator.mediaDevices.enumerateDevices().then(function(devices){
 				
 					devices.forEach(function(device){
-						if(device.kind=="videoinput"){
+						if(device.kind=="videoinput" && device.label.search("back")>-1){
 							deviceList.push(device);
 						}
 					})
@@ -115,11 +117,16 @@
 	</script>
 </head>
 <body>
-	<div><video id="v" width="300px" autoplay></video></div>
-	<canvas id="qr-canvas" width="500px" height="500px" style="display:none"></canvas>
-	
-	<select id="deviceList"></select>
-
-	<div id="result" style="border:1px dashed gray;min-width:200px;min-height:50px"></div>
+	<div class="row">
+		<div class="large-5 medium-7 small-12 small-centered columns">
+			<h2 style="text-align:center">QR Reader</h2>
+			<div style="min-width">
+				<div><video id="v" width="100%" autoplay></video></div>
+				<canvas id="qr-canvas" width="500px" height="500px" style="display:none"></canvas>
+				<select id="deviceList"></select>
+				<div id="result" style="border:1px dashed gray;min-height:50px"></div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
