@@ -50,7 +50,7 @@
 				setcam2(option);
 			})
 	
-			setcam2(true);
+			//setcam2(true);
 			//setTimeout(function(){$("#deviceList").change();}, 5000);
 
 		});
@@ -77,6 +77,33 @@
 				console.log(e);
 			}
 
+			initCamera();
+			
+		}
+		
+		function initCamera(){
+			
+			var hasBack=false;
+			var index=-1;
+			for(i=0;i<deviceList.length;i++){
+				if(deviceList[i].label.search("back")>-1){
+					hasBack=true;
+					index=i;
+					break;
+				}
+			
+			}
+			
+			if(hasBack){
+				var option={
+					deviceId:{exact:deviceList[index].deviceId},
+					facingMode:"environment"
+				}
+				setcam2(option);
+			}else{
+				setcam2(true);
+			}
+			
 		}
 		
 		function gotStream(stream) {
