@@ -69,6 +69,7 @@
 					
 					deviceList.sort(function(a,b){return quantify(a)-quantify(b);});
 					
+					console.log(deviceList);
 					
 					for(i=0;i<deviceList.length;i++){
 						$("#deviceList").append("<option value='"+i+"'>"+deviceList[i].label+"</option>");
