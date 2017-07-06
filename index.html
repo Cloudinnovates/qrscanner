@@ -142,9 +142,11 @@
 		
 			if(!result)return;
 		
+			console.log(result);
+		
 			if(result.startsWith("http")){
 			
-				if(result.search("line.me/ti/p")){
+				if(result.search("line.me/ti/p")>-1){
 					$("#result").html("Line url "+result);
 				}else{
 					$("#result").html("<a href='"+result+"'>Link</a>");
