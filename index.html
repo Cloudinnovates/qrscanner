@@ -10,6 +10,7 @@
 	<script type="text/javascript" src="resources/js/html5-qrcode.min.js"></script>
 	<script type="text/javascript" src="resources/js/vendor/foundation.min.js"></script>
 	<script type="text/javascript" src="resources/js/app.js"></script>
+	<script src='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAtwu7bSUgTe7sHbXkFA2TorAul3dsKwqo'></script>
 	<link rel="stylesheet" href="resources/css/foundation.min.css"/>
 	<script type="text/javascript">
 		
@@ -40,20 +41,7 @@
 				device=deviceList[parseInt($("#deviceList").val())];
 			
 				setcam(device);
-				/*
-				console.log(device);
-			
-				var isBack=device.label.search("back")>-1;
-				
-				var option={
-					deviceId:{exact:device.deviceId},
-					facingMode:isBack?"environment":"user"
-				}
-				*/
 			})
-	
-			//setcam(true);
-			//setTimeout(function(){$("#deviceList").change();}, 5000);
 
 		});
 
@@ -70,9 +58,7 @@
 					})
 					
 					deviceList.sort(function(a,b){return quantify(a)-quantify(b);});
-					
-					console.log(deviceList);
-					
+
 					for(i=0;i<deviceList.length;i++){
 						$("#deviceList").append("<option value='"+i+"'>"+deviceList[i].label+"</option>");
 					}
@@ -118,9 +104,7 @@
 			}
 		
 			var constraints={video: options, audio: false};
-			
-			console.log(constraints);
-			
+
 			navigator.mediaDevices.getUserMedia(constraints).then(gotStream);
 			setTimeout(captureToCanvas, 500);
 		}
@@ -131,7 +115,8 @@
 				gCtx.drawImage(v,0,0);
 				try{
 					var result=qrcode.decode();
-					$("#result").html(result);
+					//$("#result").html(result);
+					dataHandler(result);
 					setTimeout(captureToCanvas, 300);
 				}catch(e){
 					console.log(e);
@@ -145,17 +130,57 @@
 
 		}
 		
+		function init_map(lat,lng){
+			var myOptions = {zoom:14,center:new google.maps.LatLng(lat,lng),mapTypeId: google.maps.MapTypeId.ROADMAP,mapTypeControl:false,};
+			map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);
+			marker = new google.maps.Marker({icon:'${context}/style/img/marker.png',map: map,position: new google.maps.LatLng(24.8719188,121.00898699999993)});
+			//infowindow = new google.maps.InfoWindow({content:'<strong>Gemtek(正文科技)</strong><br>No.15-1 Zhonghua Road<br>Hsinchu Industrial<br>'});
+			//google.maps.event.addListener(marker, 'click', function(){infowindow.open(map,marker);});infowindow.open(map,marker);
+		}
+		
+		function dataHandler(result){
+		
+			if(!result)return;
+		
+			if(result.startsWith("http")){
+			
+				if(result.search("line.me/ti/p")){
+					$("#result").html("Line url "+result);
+				}else{
+					$("#result").html("<a href='"+result+"'>Link</a>");
+				}
+
+			}else if(result.startsWith("geo") || result.startsWith("GEO")){
+				var regex=/geo:(.*),(.*)/gi;
+				var lat=regex.exec(result)[1];
+				var lng=regex.exec(result)[2];
+				init_map(lat,lng);
+			}else if(result.startsWith("tel") || result.startsWith("TEL")){
+				var regex=/tel:(.*)/gi;
+				var tel=regex.exec(result)[1];
+				$("#result").html("Call to "+tel);
+			}else if(result.startsWith("matmsg") || result.startsWith("MATMSG")){
+				var regex=/matmsg:to:(.*);sub:(.*);body:(.*)/gi;
+				var to=regex.exec(result)[1];
+				var subject=regex.exec(result)[2];
+				var body=regex.exec(result)[3];
+				$("#result").html("<a href='mailto:"+to+"?subject='"+subject+"&body="+body+">Send Mail</a>");
+			}
+		
+		}
+		
 	</script>
 </head>
 <body>
 	<div class="row">
 		<div class="large-5 medium-7 small-12 small-centered columns">
 			<h2 style="text-align:center">QR Reader</h2>
-			<div style="min-width">
+			<div>
 				<div><video id="v" width="100%" autoplay></video></div>
 				<canvas id="qr-canvas" width="500px" height="500px" style="display:none"></canvas>
 				<select id="deviceList"></select>
 				<div id="result" style="border:1px dashed gray;min-height:50px"></div>
+				<div id="gmap_canvas"></div>
 			</div>
 		</div>
 	</div>
