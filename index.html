@@ -133,7 +133,7 @@
 		function init_map(lat,lng){
 			var myOptions = {zoom:14,center:new google.maps.LatLng(lat,lng),mapTypeId: google.maps.MapTypeId.ROADMAP,mapTypeControl:false,};
 			map = new google.maps.Map(document.getElementById('gmap_canvas'), myOptions);
-			marker = new google.maps.Marker({icon:'${context}/style/img/marker.png',map: map,position: new google.maps.LatLng(24.8719188,121.00898699999993)});
+			//marker = new google.maps.Marker({icon:'${context}/style/img/marker.png',map: map,position: new google.maps.LatLng(24.8719188,121.00898699999993)});
 			//infowindow = new google.maps.InfoWindow({content:'<strong>Gemtek(正文科技)</strong><br>No.15-1 Zhonghua Road<br>Hsinchu Industrial<br>'});
 			//google.maps.event.addListener(marker, 'click', function(){infowindow.open(map,marker);});infowindow.open(map,marker);
 		}
