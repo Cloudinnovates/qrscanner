@@ -154,8 +154,9 @@
 
 			}else if(result.startsWith("geo") || result.startsWith("GEO")){
 				var regex=/geo:(.*),(.*)/gi;
-				var lat=regex.exec(result)[1];
-				var lng=regex.exec(result)[2];
+				var matches=regex.exec(result);
+				var lat=matches[1];
+				var lng=matches[2];
 				init_map(lat,lng);
 			}else if(result.startsWith("tel") || result.startsWith("TEL")){
 				var regex=/tel:(.*)/gi;
