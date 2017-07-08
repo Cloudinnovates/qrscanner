@@ -157,7 +157,8 @@
 				var matches=regex.exec(result);
 				var lat=matches[1];
 				var lng=matches[2];
-				init_map(lat,lng);
+				//init_map(lat,lng);
+				$("#result").html("<a data-href='"+result+"'></a>");
 			}else if(result.startsWith("tel") || result.startsWith("TEL")){
 				var regex=/tel:(.*)/gi;
 				var tel=regex.exec(result)[1];
@@ -168,6 +169,8 @@
 				var subject=regex.exec(result)[2];
 				var body=regex.exec(result)[3];
 				$("#result").html("<a href='mailto:"+to+"?subject='"+subject+"&body="+body+">Send Mail</a>");
+			}else{
+				$("#result").html(result);
 			}
 		
 		}
